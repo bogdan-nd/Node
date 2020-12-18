@@ -1,0 +1,23 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_generic_services = true;
+import "google/protobuf/empty.proto";
+package com.trspo.grpc.transaction;
+
+message TransactionResponse{
+  string id =1;
+  string data = 2;
+}
+
+message TransactionBatchResponse{
+  repeated TransactionResponse transactions = 1;
+}
+
+message ReturnTransactionsRequest{
+  repeated TransactionResponse transactions = 2;
+}
+
+service TransactionService{
+  rpc getTransactions(google.protobuf.Empty) returns(TransactionBatchResponse);
+  rpc ReturnTransactionsResponse(ReturnTransactionsRequest) returns(google.protobuf.Empty);
+}
