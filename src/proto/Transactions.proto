@@ -4,17 +4,17 @@ option java_generic_services = true;
 import "google/protobuf/empty.proto";
 package com.trspo.grpc.transaction;
 
-message TransactionResponse{
+message TransactionMessage{
   string id =1;
   string data = 2;
 }
 
 message TransactionBatchResponse{
-  repeated TransactionResponse transactions = 1;
+  repeated TransactionMessage transactions = 1;
 }
 
 message ReturnTransactionsRequest{
-  repeated TransactionResponse transactions = 2;
+  repeated TransactionMessage transactions = 1;
 }
 
 service TransactionService{

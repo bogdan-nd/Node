@@ -22,13 +22,13 @@ data class Transaction(
         return String.format("Transaction:\nid -> %s\ndata -> %s",id,data);
     }
 
-    public fun fromTransactionRequest(response:TransactionResponse):Transaction{
+    public fun fromTransactionMessage(response:TransactionMessage):Transaction{
         val transactionId:UUID = UUID.fromString(response.id)
         return Transaction(transactionId, response.data)
     }
 
-    public fun toTransactionResponse():TransactionResponse{
-        return TransactionResponse.newBuilder()
+    public fun toTransactionMessage():TransactionMessage{
+        return TransactionMessage.newBuilder()
                 .setId(id.toString())
                 .setData(data)
                 .build()
