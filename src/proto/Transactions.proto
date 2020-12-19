@@ -13,11 +13,11 @@ message TransactionBatchResponse{
   repeated TransactionMessage transactions = 1;
 }
 
-message ReturnTransactionsRequest{
+message TransactionBatchRequest{
   repeated TransactionMessage transactions = 1;
 }
 
 service TransactionService{
   rpc getTransactions(google.protobuf.Empty) returns(TransactionBatchResponse);
-  rpc ReturnTransactionsResponse(ReturnTransactionsRequest) returns(google.protobuf.Empty);
+  rpc ReturnTransactionsResponse(TransactionBatchRequest) returns(google.protobuf.Empty);
 }

@@ -4,6 +4,7 @@ import java.util.*
 import com.google.common.hash.Hashing.sha256
 import java.nio.charset.StandardCharsets
 import com.trspo.grpc.transaction.*
+import kotlin.collections.ArrayList
 
 data class Transaction(
         val id:UUID,
@@ -22,9 +23,34 @@ data class Transaction(
         return String.format("Transaction:\nid -> %s\ndata -> %s",id,data);
     }
 
-    public fun fromTransactionMessage(response:TransactionMessage):Transaction{
-        val transactionId:UUID = UUID.fromString(response.id)
-        return Transaction(transactionId, response.data)
+    companion object {
+        fun fromTransactionMessage(response: TransactionMessage): Transaction {
+            val transactionId: UUID = UUID.fromString(response.id)
+            return Transaction(transactionId, response.data)
+        }
+
+        fun fromTransactionBatch(response: TransactionBatchResponse):List<Transaction>{
+            val transactions:MutableList<Transaction> = ArrayList()
+
+            for(transactionMessage in response.transactionsList){
+                val newTransaction = fromTransactionMessage(transactionMessage)
+                transactions.add(newTransaction)
+            }
+            return transactions
+        }
+
+        fun toReturnRequest(transactions:List<Transaction>):TransactionBatchRequest{
+            val transactionMessageList:MutableList<TransactionMessage> = ArrayList()
+
+            for(transaction in transactions){
+                val transactionMessage = transaction.toTransactionMessage()
+                transactionMessageList.add(transactionMessage)
+            }
+
+            return TransactionBatchRequest.newBuilder()
+                    .addAllTransactions(transactionMessageList)
+                    .build()
+        }
     }
 
     public fun toTransactionMessage():TransactionMessage{

@@ -1,12 +1,17 @@
 package com.trspo.node.services
 
 import com.google.protobuf.Empty
-import com.trspo.grpc.transaction.*
+import com.trspo.grpc.transaction.TransactionBatchRequest
+import com.trspo.grpc.transaction.TransactionBatchResponse
+import com.trspo.grpc.transaction.TransactionServiceGrpc
 import com.trspo.grpc.transaction.TransactionServiceGrpc.TransactionServiceBlockingStub
 import com.trspo.node.entities.Transaction
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @Service
 class TransactionService {
@@ -16,24 +21,15 @@ class TransactionService {
             .build()
     private val stub: TransactionServiceBlockingStub = TransactionServiceGrpc.newBlockingStub(channel)
 
-    public fun getTransactions(): MutableList<TransactionMessage> {
-        val emptyRequest:Empty = Empty.newBuilder().build()
-        val transactionBatch:TransactionBatchResponse = stub.getTransactions(emptyRequest)
-        return transactionBatch.transactionsList
+    fun getTransactions(): List<Transaction> {
+        val emptyRequest: Empty = Empty.newBuilder().build()
+        val transactionBatch: TransactionBatchResponse = stub.getTransactions(emptyRequest)
+
+        return Transaction.fromTransactionBatch(transactionBatch)
     }
 
-    public fun returnToPull(transactions: List<Transaction>){
-        var transactionMessageList:MutableList<TransactionMessage> = ArrayList()
-        var transactionMessage:TransactionMessage
-
-        for(transaction in transactions){
-            transactionMessage = transaction.toTransactionMessage()
-            transactionMessageList.add(transactionMessage)
-        }
-
-        val returnRequest = ReturnTransactionsRequest.newBuilder()
-                .addAllTransactions(transactionMessageList)
-                .build()
+    fun returnToPull(transactions: List<Transaction>) {
+        val returnRequest: TransactionBatchRequest = Transaction.toReturnRequest(transactions)
 
         stub.returnTransactionsResponse(returnRequest)
     }
