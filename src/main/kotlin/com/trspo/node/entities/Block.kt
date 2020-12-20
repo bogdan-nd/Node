@@ -9,7 +9,8 @@ data class Block(
 
     private val timeStamp: Timestamp = Timestamp(System.currentTimeMillis())
     var nonce:Long =0
-    var hash:String =""
+    lateinit var hash:String
+    lateinit var minerId:String
 
     fun getBlockHeader():String{
         var blockHeader : String = previousHash

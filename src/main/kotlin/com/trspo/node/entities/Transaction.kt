@@ -53,7 +53,7 @@ data class Transaction(
         }
     }
 
-    public fun toTransactionMessage():TransactionMessage{
+    fun toTransactionMessage():TransactionMessage{
         return TransactionMessage.newBuilder()
                 .setId(id.toString())
                 .setData(data)

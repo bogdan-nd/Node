@@ -38,6 +38,7 @@ dependencies {
     implementation("com.google.guava:guava:30.0-jre")
     api("com.google.guava:guava:30.0-jre")
 //    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.amqp:spring-rabbit")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
