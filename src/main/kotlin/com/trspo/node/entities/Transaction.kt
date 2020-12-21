@@ -1,16 +1,19 @@
 package com.trspo.node.entities
 
-import java.util.*
 import com.google.common.hash.Hashing.sha256
+import com.trspo.grpc.transaction.TransactionBatchRequest
+import com.trspo.grpc.transaction.TransactionBatchResponse
+import com.trspo.grpc.transaction.TransactionMessage
 import java.nio.charset.StandardCharsets
-import com.trspo.grpc.transaction.*
+import java.util.*
 import kotlin.collections.ArrayList
 
 data class Transaction(
-        val id:UUID,
+        val id: UUID,
         val data: String) {
-    val transactionHash:String = hashData()
+    constructor() : this(UUID.randomUUID(), "")
 
+    val transactionHash: String = hashData()
     private fun hashData(): String {
         val totalData: String = data + id
 
@@ -20,7 +23,7 @@ data class Transaction(
     }
 
     override fun toString(): String {
-        return String.format("Transaction:\nid -> %s\ndata -> %s",id,data);
+        return String.format("\nTransaction:\nid -> %s\ndata -> %s", id, data)
     }
 
     companion object {
@@ -29,20 +32,20 @@ data class Transaction(
             return Transaction(transactionId, response.data)
         }
 
-        fun fromTransactionBatch(response: TransactionBatchResponse):List<Transaction>{
-            val transactions:MutableList<Transaction> = ArrayList()
+        fun fromTransactionBatch(response: TransactionBatchResponse): List<Transaction> {
+            val transactions: MutableList<Transaction> = ArrayList()
 
-            for(transactionMessage in response.transactionsList){
+            for (transactionMessage in response.transactionsList) {
                 val newTransaction = fromTransactionMessage(transactionMessage)
                 transactions.add(newTransaction)
             }
             return transactions
         }
 
-        fun toReturnRequest(transactions:List<Transaction>):TransactionBatchRequest{
-            val transactionMessageList:MutableList<TransactionMessage> = ArrayList()
+        fun toReturnRequest(transactions: List<Transaction>): TransactionBatchRequest {
+            val transactionMessageList: MutableList<TransactionMessage> = ArrayList()
 
-            for(transaction in transactions){
+            for (transaction in transactions) {
                 val transactionMessage = transaction.toTransactionMessage()
                 transactionMessageList.add(transactionMessage)
             }
@@ -53,7 +56,7 @@ data class Transaction(
         }
     }
 
-    fun toTransactionMessage():TransactionMessage{
+    fun toTransactionMessage(): TransactionMessage {
         return TransactionMessage.newBuilder()
                 .setId(id.toString())
                 .setData(data)

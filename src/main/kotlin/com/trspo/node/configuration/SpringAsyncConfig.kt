@@ -9,10 +9,10 @@ import java.util.concurrent.Executor
 
 @Configuration
 @EnableAsync
-class SpringAsyncConfig{
+class SpringAsyncConfig : AsyncConfigurer {
 
     @Bean
-    fun getAsyncExecutor(): Executor {
+    override fun getAsyncExecutor(): Executor {
         return ThreadPoolTaskExecutor()
     }
 }

@@ -9,9 +9,6 @@ import com.trspo.node.entities.Transaction
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
 
 @Service
 class TransactionService {

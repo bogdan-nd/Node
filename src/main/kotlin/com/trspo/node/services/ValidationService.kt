@@ -7,29 +7,28 @@ import java.nio.charset.StandardCharsets
 
 @Service
 class ValidationService {
-    fun validate(block: Block):Boolean{
+    fun validate(block: Block): Boolean {
         val blockHeader = block.getBlockHeader()
-        val nonce:Long = block.nonce
+        val nonce: Long = block.nonce
 
-        val input = blockHeader + nonce.toString()
+        val input = blockHeader + nonce
         val hash = getHash(input)
+        val target = stringMultiply("0", block.accuracy)
 
-        val target = stringMultiply("0",block.accuracy)
-
-        return checkHash(hash,target)
+        return checkHash(hash, target)
     }
 
-    private fun checkHash(hash:String, target:String):Boolean{
+    private fun checkHash(hash: String, target: String): Boolean {
         return hash.startsWith(target)
     }
 
-    private fun getHash(text:String):String{
+    private fun getHash(text: String): String {
         return Hashing.sha256()
                 .hashString(text, StandardCharsets.UTF_8)
-                .toString();
+                .toString()
     }
 
-    private fun stringMultiply(text:String,times:Int):String{
-        return text.repeat(times-1)
+    private fun stringMultiply(text: String, times: Int): String {
+        return text.repeat(times)
     }
 }

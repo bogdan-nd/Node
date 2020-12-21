@@ -1,33 +1,30 @@
 package com.trspo.node.entities
 
+import lombok.NoArgsConstructor
 import java.sql.Timestamp
 
+@NoArgsConstructor
 data class Block(
         val previousHash: String,
         val transactionList: List<Transaction>,
         val accuracy: Int) {
+    constructor() : this("", ArrayList<Transaction>(), 6)
 
-    private val timeStamp: Timestamp = Timestamp(System.currentTimeMillis())
-    var nonce:Long =0
-    lateinit var hash:String
-    lateinit var minerId:String
+    var nonce: Long = 0
+    lateinit var timeStamp: Timestamp
+    lateinit var hash: String
+    lateinit var minerId: String
 
-    fun getBlockHeader():String{
-        var blockHeader : String = previousHash
+    fun getBlockHeader(): String {
+        var blockHeader: String = previousHash
 
-        for(transaction in transactionList)
+        for (transaction in transactionList)
             blockHeader += transaction.transactionHash
 
-        return blockHeader + timeStamp
+        return blockHeader
     }
 
-    override fun toString(): String {
-        var stringOutput = String.format("Block:\n Hash -> %s\n Previous hash -> %s\n Transactions:\n",hash,previousHash)
-
-        for(transaction in transactionList)
-            stringOutput += transaction
-
-        stringOutput += String.format("\n Accuracy -> %s\n Nonce -> %s",accuracy,nonce)
-        return stringOutput
+    fun finishMining() {
+        timeStamp = Timestamp(System.currentTimeMillis())
     }
 }

@@ -6,12 +6,11 @@ import org.springframework.scheduling.annotation.EnableAsync
 
 @SpringBootApplication
 @EnableAsync
-class NodeApplication {
-    companion object {
-        @JvmStatic
-        fun main(args: Array<String>) {
-            runApplication<NodeApplication>(*args)
-        }
-    }
+class NodeApplication
+
+fun main(args: Array<String>) {
+    runApplication<NodeApplication>(*args)
 }
+
+
 

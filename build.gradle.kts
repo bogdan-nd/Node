@@ -31,9 +31,10 @@ repositories {
 dependencies {
     implementation("io.grpc:grpc-kotlin-stub:1.0.0")
     implementation("net.devh:grpc-server-spring-boot-starter:2.5.1.RELEASE")
-    implementation("com.google.protobuf:protobuf-java:3.6.1")
+    implementation("com.google.protobuf:protobuf-java:3.14.0")
     implementation("io.grpc:grpc-protobuf:1.15.1")
     implementation("io.grpc:grpc-stub:1.15.1")
+    implementation ("io.github.microutils:kotlin-logging:1.12.0")
 //    implementation("io.grpc:grpc-netty-shaded:1.15.1")
     implementation("com.google.guava:guava:30.0-jre")
     api("com.google.guava:guava:30.0-jre")
