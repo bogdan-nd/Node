@@ -32,7 +32,8 @@ class MinerService {
 
     fun startMiningStage(a: String) {
         print("\nGet message for starting mining\n")
-        val transactions = transactionService.getTransactions()
+        val transAmount = (3..7).random()
+        val transactions = transactionService.getTransactions(transAmount)
         val block = Block(previousHash, transactions, 6)
         blockBeingMined = powService.proofOfWork(block)
     }
