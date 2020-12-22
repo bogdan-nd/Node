@@ -12,6 +12,8 @@ class MinedBlockProducer {
     @Autowired
     lateinit var transactionService: TransactionService
     @Autowired
+    lateinit var blockService:BlockService
+    @Autowired
     lateinit var rabbitTemplate: RabbitTemplate
     @Value("\${rabbitmq.block-exchange}")
     lateinit var blockExchange: String
@@ -21,6 +23,7 @@ class MinedBlockProducer {
         rabbitTemplate.convertAndSend(blockExchange, "", minedBlock)
         print("\nSent block to the network\n")
         markPoolTransactionsMined(minedBlock)
+        blockService.sendMinedBlockToStorage(minedBlock)
     }
 
     fun markPoolTransactionsMined(minedBlock: Block){

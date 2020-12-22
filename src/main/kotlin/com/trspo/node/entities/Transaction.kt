@@ -42,13 +42,19 @@ data class Transaction(
             return transactions
         }
 
-        fun toReturnRequest(transactions: List<Transaction>): TransactionBatchRequest {
+        fun toTransactionMessages(transactions: List<Transaction>): MutableList<TransactionMessage> {
             val transactionMessageList: MutableList<TransactionMessage> = ArrayList()
 
             for (transaction in transactions) {
                 val transactionMessage = transaction.toTransactionMessage()
                 transactionMessageList.add(transactionMessage)
             }
+
+            return transactionMessageList
+        }
+
+        fun toReturnRequest(transactions: List<Transaction>): TransactionBatchRequest {
+            val transactionMessageList: MutableList<TransactionMessage> = Transaction.toTransactionMessages(transactions)
 
             return TransactionBatchRequest.newBuilder()
                     .addAllTransactions(transactionMessageList)
