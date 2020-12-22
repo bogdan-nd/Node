@@ -1,6 +1,5 @@
 package com.trspo.node.services
 
-import com.google.protobuf.Empty
 import com.trspo.grpc.transaction.TransactionAmountRequest
 import com.trspo.grpc.transaction.TransactionBatchRequest
 import com.trspo.grpc.transaction.TransactionBatchResponse
@@ -19,7 +18,7 @@ class TransactionService {
             .build()
     private val stub: TransactionServiceBlockingStub = TransactionServiceGrpc.newBlockingStub(channel)
 
-    fun getTransactions(transactionAmount:Int): List<Transaction> {
+    fun getTransactions(transactionAmount: Int): List<Transaction> {
         val transactionAmountRequest: TransactionAmountRequest = TransactionAmountRequest.newBuilder()
                 .setTransactionAmount(transactionAmount)
                 .build()

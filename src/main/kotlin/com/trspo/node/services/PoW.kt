@@ -26,16 +26,23 @@ class PoW {
         var hash = getHash(blockHeader + nonce)
 
         while (!hash.startsWith(target)) {
+            if(Thread.currentThread().isInterrupted) {
+                print("\nMining of block has been interrupted\n")
+                break
+            }
+
             nonce += 1
             val potentialOutput = blockHeader + nonce
             hash = getHash(potentialOutput)
         }
 
-        block.nonce = nonce
-        block.hash = hash
-        block.minerId = nodeId
-        block.finishMining()
-        minedBlockProducer.sendMinedBlockToNetwork(block)
+        if(!Thread.currentThread().isInterrupted) {
+            block.nonce = nonce
+            block.hash = hash
+            block.minerId = nodeId
+            block.finishMining()
+            minedBlockProducer.sendMinedBlockToNetwork(block)
+        }
 
         return AsyncResult(block)
     }
