@@ -61,7 +61,7 @@ sourceSets {
         java.srcDirs("src/main/kotlin","./build/generated/source/proto/main/java",
                 "./build/generated/source/proto/main/grpc", "./build/generated/source/proto/main/grpckt")
         resources.srcDir("src/main/resources")
-        proto.srcDir("src/proto")
+        proto.srcDir("src/main/proto")
     }
 }
 
