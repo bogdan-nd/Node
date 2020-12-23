@@ -1,6 +1,8 @@
 package com.trspo.node.services
 
 import com.trspo.node.entities.Block
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.EnableAsync
@@ -27,9 +29,10 @@ class MinerService {
     lateinit var nodeId: String
 
     lateinit var blockBeingMined: Future<Block>
+    val logger: Logger = LoggerFactory.getLogger(MinerService::class.java)
 
     fun startMiningStage(a: String) {
-        print("\nGet message for starting mining\n")
+        logger.info("Get message for starting mining")
         val transAmount = (3..7).random()
         val transactions = transactionService.getTransactions(transAmount)
         val block = Block(powService.previousHash, transactions, 6)
@@ -40,14 +43,13 @@ class MinerService {
         val sameNode: Boolean = nodeId == block.minerId
         if (sameNode)
             return
-
-        print(String.format("\nGet block for validation, mined by %s\n", block.minerId))
+        logger.info(String.format("\nGet block for validation, mined by %s\n", block.minerId))
 
         val blockCorrectness = validationService.validate(block)
         if (!blockCorrectness)
             return
 
-        print(String.format("\nBlock, mined by %s, is correct", block.minerId))
+        logger.info(String.format("\nBlock, mined by %s, is correct", block.minerId))
 
         if (!blockBeingMined.isDone)
             blockBeingMined.cancel(true)

@@ -2,6 +2,8 @@ package com.trspo.node.services
 
 import com.google.common.hash.Hashing
 import com.trspo.node.entities.Block
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async
@@ -18,6 +20,7 @@ class PoW {
     @Autowired
     lateinit var minedBlockProducer: MinedBlockProducer
     var previousHash: String = "Genesis"
+    val logger: Logger = LoggerFactory.getLogger(PoW::class.java)
 
     @Async()
     fun proofOfWork(block: Block): Future<Block> {
@@ -28,7 +31,7 @@ class PoW {
 
         while (!hash.startsWith(target)) {
             if (Thread.currentThread().isInterrupted) {
-                print("\nMining of block has been interrupted\n")
+                logger.info("\nMining of block has been interrupted\n")
                 break
             }
 

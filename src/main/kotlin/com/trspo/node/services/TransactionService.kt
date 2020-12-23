@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class TransactionService {
-    private val url: String = "transaction-pool"
+    private val url: String = "pool-pow"
     private val channel: ManagedChannel = ManagedChannelBuilder.forAddress(url, 9090)
             .usePlaintext()
             .build()
