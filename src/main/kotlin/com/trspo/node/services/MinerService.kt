@@ -3,6 +3,7 @@ package com.trspo.node.services
 import com.trspo.node.entities.Block
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -11,6 +12,7 @@ import java.util.concurrent.Future
 @Service
 @RestController
 @RequestMapping("abc")
+@EnableAsync
 class MinerService {
     @Autowired
     lateinit var powService: PoW
@@ -21,20 +23,16 @@ class MinerService {
     @Autowired
     lateinit var validationService: ValidationService
 
-    @Autowired
-    lateinit var minedBlockProducer: MinedBlockProducer
-
     @Value("\${node-id}")
     lateinit var nodeId: String
 
-    var previousHash: String = "a"
     lateinit var blockBeingMined: Future<Block>
 
     fun startMiningStage(a: String) {
         print("\nGet message for starting mining\n")
         val transAmount = (3..7).random()
         val transactions = transactionService.getTransactions(transAmount)
-        val block = Block(previousHash, transactions, 6)
+        val block = Block(powService.previousHash, transactions, 6)
         blockBeingMined = powService.proofOfWork(block)
     }
 
@@ -49,10 +47,11 @@ class MinerService {
         if (!blockCorrectness)
             return
 
+        print(String.format("\nBlock, mined by %s, is correct", block.minerId))
+
         if (!blockBeingMined.isDone)
             blockBeingMined.cancel(true)
 
-        print(String.format("\nBlock, mined by %s, is correct", block.minerId))
-        previousHash = block.hash
+        powService.previousHash = block.hash
     }
 }

@@ -17,8 +17,9 @@ class PoW {
 
     @Autowired
     lateinit var minedBlockProducer: MinedBlockProducer
+    var previousHash: String = "Genesis"
 
-    @Async
+    @Async()
     fun proofOfWork(block: Block): Future<Block> {
         val blockHeader = block.getBlockHeader()
         val target: String = stringMultiply("0", block.accuracy)
@@ -26,7 +27,7 @@ class PoW {
         var hash = getHash(blockHeader + nonce)
 
         while (!hash.startsWith(target)) {
-            if(Thread.currentThread().isInterrupted) {
+            if (Thread.currentThread().isInterrupted) {
                 print("\nMining of block has been interrupted\n")
                 break
             }
@@ -36,11 +37,12 @@ class PoW {
             hash = getHash(potentialOutput)
         }
 
-        if(!Thread.currentThread().isInterrupted) {
+        if (!Thread.currentThread().isInterrupted) {
             block.nonce = nonce
             block.hash = hash
             block.minerId = nodeId
             block.finishMining()
+            previousHash = block.hash
             minedBlockProducer.sendMinedBlockToNetwork(block)
         }
 

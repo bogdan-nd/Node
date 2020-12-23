@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class BlockService : BlockServiceGrpc.BlockServiceImplBase() {
-    private val url: String = "localhost"
+    private val url: String = "block-system"
     private val channel: ManagedChannel = ManagedChannelBuilder.forAddress(url, 9091)
             .usePlaintext()
             .build()
